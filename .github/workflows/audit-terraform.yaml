@@ -3,7 +3,8 @@ name: Audit Terraform
 on:
   push:
     branches:
-      - '**'
+      - 'aa'
+      - '!main'
 jobs:
   terraform-audit:
     name: Terraform Audit

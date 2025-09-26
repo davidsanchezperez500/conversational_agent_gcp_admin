@@ -25,7 +25,7 @@ frequency_bigtable_backup          = "24h0m0s"
 min_instances_vpc_access_connector = 2
 max_instances_vpc_access_connector = 3
 ack_deadline_seconds               = 300
-cpu_limit_cloud_run_worker         = "2"
+cpu_limit_cloud_run_worker         = "1"
 memory_limit_cloud_run_worker      = "1Gi"
 
 enable_apis = [
