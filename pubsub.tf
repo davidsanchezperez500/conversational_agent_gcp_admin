@@ -26,3 +26,17 @@ resource "google_pubsub_subscription" "vertex_request_sub" {
 
   ack_deadline_seconds = var.ack_deadline_seconds
 }
+
+resource "google_pubsub_topic" "new_request_topic" {
+  count        = contains(["null"], var.environment) ? 1 : 0
+  project      = var.project_id
+  name         = "new-request-${var.environment}"
+  kms_key_name = google_kms_crypto_key.pubsub_crypto_key.id
+
+  message_storage_policy {
+    allowed_persistence_regions = ["us-east1"]
+  }
+  depends_on = [
+    google_kms_crypto_key_iam_member.pubsub_key_iam
+  ]
+}

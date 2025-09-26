@@ -214,3 +214,4 @@ resource "google_compute_global_forwarding_rule" "frontend_forwarding_rule" {
   target                = google_compute_target_https_proxy.frontend_proxy.self_link
   load_balancing_scheme = "EXTERNAL_MANAGED"
 }
+
