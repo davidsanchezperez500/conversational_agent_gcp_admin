@@ -1,0 +1,147 @@
+name: Audit Terraform
+
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  terraform-audit:
+    name: Terraform Audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    environment: dev
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: 'actions/checkout@v4'
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: "${{ vars.GCP_SERVICE_ACCOUNT }}"
+          
+          export_environment_variables: true
+          create_credentials_file: true
+          access_token_lifetime: 500
+      - name: Scan Code for Secrets (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+          
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v3"
+        with:
+          version: ">= 416.0.0"
+
+      - name: Check currently authenticated user
+        run: gcloud auth list
+
+      - name: IaC Audit with Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          framework: terraform
+        continue-on-error: true
+
+      - name: IaC Audit with Terrascan
+        id: terrascan
+        uses: accurics/terrascan-action@main
+        with:
+          iac_type: 'terraform'
+          iac_version: 'v14'
+          policy_type: 'aws'
+          only_warn: true
+        continue-on-error: true
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.3
+      
+      - name: Terraform Validate
+        run: |
+          terraform --version
+          terraform fmt -check=true -diff=true -recursive
+          terraform init -input=false -backend-config=environment/dev/gcp_bucket.tfvars -reconfigure        
+          terraform validate
+
+  terraform-plan-dev:
+    name: Terraform Plan Dev
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    environment: dev
+    env:
+      TF_VAR_api_key_front_value: ${{ secrets.TF_VAR_API_KEY_FRONT_VALUE }}
+
+    steps:
+      - uses: 'actions/checkout@v4'
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: "${{ vars.GCP_SERVICE_ACCOUNT }}"
+          
+          export_environment_variables: true
+          create_credentials_file: true
+          access_token_lifetime: 500
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v3"
+        with:
+          version: ">= 416.0.0"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.3
+          
+      - name: Terraform Plan dev
+        id: plan-dev
+        run: |
+          terraform init -input=false -backend-config=environment/dev/gcp_bucket.tfvars -reconfigure
+          terraform plan -var-file=environment/dev/variables.tfvars -input=false -out=dev.tfplan
+          terraform show --json dev.tfplan > dev-tfplan.json
+
+  terraform-plan-itg:
+    name: Terraform Plan ITG
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    environment: itg
+    env:
+      TF_VAR_api_key_front_value: ${{ secrets.TF_VAR_API_KEY_FRONT_VALUE }}
+
+    steps:
+      - uses: 'actions/checkout@v4'
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: "${{ vars.GCP_SERVICE_ACCOUNT }}"
+          
+          export_environment_variables: true
+          create_credentials_file: true
+          access_token_lifetime: 500
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v3"
+        with:
+          version: ">= 416.0.0"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.3
+          
+      - name: Terraform Plan itg
+        id: itg
+        run: |
+          terraform init -input=false -backend-config=environment/itg/gcp_bucket.tfvars -reconfigure
+          terraform plan -var-file=environment/itg/variables.tfvars -input=false -out=itg.tfplan
+          terraform show --json itg.tfplan > itg-tfplan.json
