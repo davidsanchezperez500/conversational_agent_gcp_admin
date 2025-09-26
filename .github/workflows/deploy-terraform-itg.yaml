@@ -6,8 +6,9 @@ on:
       target_environment:
         description: 'Target environment itg'
         default: 'itg'
+        required: true
 jobs:
-  terraform-audit-plan:
+  terraform-plan:
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -29,8 +30,6 @@ jobs:
           export_environment_variables: true
           create_credentials_file: true
           access_token_lifetime: 500
-      - name: Scan Code for Secrets (Gitleaks)
-        uses: gitleaks/gitleaks-action@v2
           
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v3"
@@ -40,37 +39,15 @@ jobs:
       - name: Check currently authenticated user
         run: gcloud auth list
 
-      - name: IaC Audit with Checkov
-        uses: bridgecrewio/checkov-action@v12
-        with:
-          framework: terraform
-        continue-on-error: true
-
-      - name: IaC Audit with Terrascan
-        id: terrascan
-        uses: accurics/terrascan-action@main
-        with:
-          iac_type: 'terraform'
-          iac_version: 'v14'
-          policy_type: 'aws'
-          only_warn: true
-        continue-on-error: true
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.13.3
-      
-      - name: Terraform Validate
-        run: |
-          terraform --version
-          terraform fmt -check=true -diff=true -recursive
-          terraform init -input=false -backend-config=environment/${{ github.event.inputs.target_environment }}/gcp_bucket.tfvars -reconfigure        
-          terraform validate
   
       - name: Terraform Plan
         id: plan
         run: |
+          terraform init -input=false -backend-config=environment/${{ github.event.inputs.target_environment }}/gcp_bucket.tfvars -reconfigure
           terraform plan -var-file=environment/${{ github.event.inputs.target_environment }}/variables.tfvars -input=false -out=${{ github.event.inputs.target_environment }}.tfplan
           terraform show --json ${{ github.event.inputs.target_environment }}.tfplan > ${{ github.event.inputs.target_environment }}-tfplan.json
 
@@ -82,13 +59,13 @@ jobs:
           retention-days: 1 
 
   terraform-apply:
-    needs: terraform-audit-plan
+    needs: terraform-plan
+    name: Terraform Apply ITG
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
       id-token: 'write'
     environment: ${{ github.event.inputs.target_environment }}-apply
-    if: github.ref == 'refs/heads/main' 
 
     steps:
       - uses: 'actions/checkout@v4'

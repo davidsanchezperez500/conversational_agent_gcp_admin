@@ -38,6 +38,9 @@ resource "google_kms_crypto_key" "key_artifact_registry_repository" {
   name            = "key-artifact-repo-5-${var.environment}"
   key_ring        = google_kms_key_ring.keyring_artifact_registry_repository.id
   rotation_period = "7776000s"
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_kms_crypto_key_iam_binding" "crypto_key_artifact_registry_repository" {
