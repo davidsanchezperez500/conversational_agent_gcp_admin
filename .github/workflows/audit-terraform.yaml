@@ -3,7 +3,7 @@ name: Audit Terraform
 on:
   push:
     branches:
-      - 'aa'
+      - '**'
       - '!main'
 jobs:
   terraform-audit:
@@ -39,6 +39,22 @@ jobs:
       - name: Check currently authenticated user
         run: gcloud auth list
 
+      - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          github_token: ${{ github.token }}
+
+      - name: Run Trivy vulnerability scanner in IaC mode
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'config'
+          hide-progress: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+        continue-on-error: true 
+
       - name: IaC Audit with Checkov
         uses: bridgecrewio/checkov-action@v12
         with:
@@ -51,7 +67,7 @@ jobs:
         with:
           iac_type: 'terraform'
           iac_version: 'v14'
-          policy_type: 'aws'
+          policy_type: 'gcp'
           only_warn: true
         continue-on-error: true
 
@@ -59,6 +75,23 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.13.3
+
+
+      - name: Setup TFLint and GCP Plugin
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.59.1
+
+      - name: TFLint Init (Install Plugins)
+        run: |
+          tflint --init
+
+      - name: Terraform Validate & Lint
+        run: |
+          tflint --version
+          echo "Running TFLint..."
+          tflint --recursive
+        continue-on-error: true
       
       - name: Terraform Validate
         run: |
