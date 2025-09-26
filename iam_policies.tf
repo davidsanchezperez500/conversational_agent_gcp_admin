@@ -51,7 +51,7 @@ data "google_iam_policy" "conversational_agent_project_policy" {
     ]
   } */
 
-  binding {
+  /*   binding {
     role = "roles/servicenetworking.serviceAgent"
     members = [
       "serviceAccount:service-${var.project_number}@service-networking.iam.gserviceaccount.com",
@@ -64,7 +64,7 @@ data "google_iam_policy" "conversational_agent_project_policy" {
       "serviceAccount:service-${var.project_number}@service-networking.iam.gserviceaccount.com",
     ]
   }
-
+  */
   binding {
     role = "roles/iam.serviceAccountTokenCreator"
     members = [
@@ -92,7 +92,6 @@ data "google_iam_policy" "conversational_agent_project_policy" {
       "serviceAccount:service-${var.project_number}@gcp-sa-containerscanning.iam.gserviceaccount.com",
     ]
   }
-
   binding {
     role = "roles/artifactregistry.serviceAgent"
     members = [
@@ -101,17 +100,17 @@ data "google_iam_policy" "conversational_agent_project_policy" {
   }
 
 
-  binding {
+  /*   binding {
     role = "roles/aiplatform.serviceAgent"
     members = [
       "serviceAccount:service-${var.project_number}@gcp-sa-aiplatform.iam.gserviceaccount.com",
     ]
-  }
+  } */
 
   binding {
     role = "roles/aiplatform.user"
     members = [
-      "serviceAccount:sa-worker-agent-${var.environment}@conversational-agent-dev.iam.gserviceaccount.com",
+      "serviceAccount:sa-worker-agent-${var.environment}@conversational-agent-${var.environment}.iam.gserviceaccount.com",
     ]
   }
 

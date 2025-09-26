@@ -14,6 +14,7 @@ module "frontend_service" {
   ingress_traffic = "INGRESS_TRAFFIC_ALL"
   business_tags   = local.business_tags
   component_label = "frontend"
+  depends_on      = [google_project_iam_policy.conversational_agent_project]
 }
 
 resource "google_cloud_run_v2_service_iam_member" "frontend_invokes_chatbot" {
@@ -41,6 +42,7 @@ module "chatbot_agent" {
   vpc_connector_id = google_vpc_access_connector.vpc_connector.id
   business_tags    = local.business_tags
   component_label  = "backend"
+  depends_on       = [google_project_iam_policy.conversational_agent_project]
 
 }
 
@@ -62,6 +64,7 @@ module "conversational_agent" {
   vpc_connector_id = google_vpc_access_connector.vpc_connector.id
   business_tags    = local.business_tags
   component_label  = "backend"
+  depends_on       = [google_project_iam_policy.conversational_agent_project]
 }
 
 /* resource "google_bigtable_instance_iam_member" "conversational_bigtable_access" {
@@ -91,6 +94,7 @@ module "worker_agent" {
   memory_limit     = var.memory_limit_cloud_run_worker
   business_tags    = local.business_tags
   component_label  = "backend"
+  depends_on       = [google_project_iam_policy.conversational_agent_project]
 }
 
 /* resource "google_bigtable_instance_iam_member" "worker_bigtable_access" {

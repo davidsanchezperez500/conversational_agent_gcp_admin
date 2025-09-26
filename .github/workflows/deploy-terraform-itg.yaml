@@ -1,16 +1,18 @@
-name: Depoly Terraform
+name: Depoly Terraform ITG
 
 on:
-  push:
-    branches:
-      - '**'
+  workflow_dispatch:
+    inputs:
+      target_environment:
+        description: 'Target environment itg'
+        default: 'itg'
 jobs:
   terraform-audit-plan:
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
       id-token: 'write'
-    environment: dev
+    environment: ${{ github.event.inputs.target_environment }}
     env:
       TF_VAR_api_key_front_value: ${{ secrets.TF_VAR_API_KEY_FRONT_VALUE }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,20 +65,20 @@ jobs:
         run: |
           terraform --version
           terraform fmt -check=true -diff=true -recursive
-          terraform init -input=false -backend-config=environment/dev/gcp_bucket.tfvars -reconfigure        
+          terraform init -input=false -backend-config=environment/${{ github.event.inputs.target_environment }}/gcp_bucket.tfvars -reconfigure        
           terraform validate
   
       - name: Terraform Plan
         id: plan
         run: |
-          terraform plan -var-file=environment/dev/variables.tfvars -input=false -out=dev.tfplan
-          terraform show --json dev.tfplan > dev-tfplan.json
+          terraform plan -var-file=environment/${{ github.event.inputs.target_environment }}/variables.tfvars -input=false -out=${{ github.event.inputs.target_environment }}.tfplan
+          terraform show --json ${{ github.event.inputs.target_environment }}.tfplan > ${{ github.event.inputs.target_environment }}-tfplan.json
 
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: ./dev.tfplan
+          path: ./${{ github.event.inputs.target_environment }}.tfplan
           retention-days: 1 
 
   terraform-apply:
@@ -85,7 +87,7 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-    environment: dev-apply
+    environment: ${{ github.event.inputs.target_environment }}-apply
     if: github.ref == 'refs/heads/main' 
 
     steps:
@@ -120,5 +122,5 @@ jobs:
       - name: Terraform Apply
         id: apply
         run: |
-          terraform init -input=false -backend-config=environment/dev/gcp_bucket.tfvars -reconfigure    
-          terraform apply -input=false dev.tfplan
+          terraform init -input=false -backend-config=environment/${{ github.event.inputs.target_environment }}/gcp_bucket.tfvars -reconfigure    
+          terraform apply -input=false ${{ github.event.inputs.target_environment }}.tfplan
