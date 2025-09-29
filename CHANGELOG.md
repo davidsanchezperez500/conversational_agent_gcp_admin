@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.2.0 (2025-09-29)
+
+### Features
+
+- Separate environments
+  ([#6](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/6),
+  [`1b28b80`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/1b28b8014b281f994c4e9f6e3a4f33620e6cbc01))
+
+- Separate in new env security
+  ([#6](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/6),
+  [`1b28b80`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/1b28b8014b281f994c4e9f6e3a4f33620e6cbc01))
+
+
 ## v1.1.0 (2025-09-26)
 
 ### Features
