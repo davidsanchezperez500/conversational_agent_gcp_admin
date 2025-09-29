@@ -165,6 +165,11 @@ resource "google_compute_backend_service" "frontend_backend" {
     group = google_compute_region_network_endpoint_group.frontend_neg.self_link
   }
 
+  log_config {
+    enable      = true
+    sample_rate = 1.0
+  }
+
 }
 
 # Create the URL map to route requests to the backend service

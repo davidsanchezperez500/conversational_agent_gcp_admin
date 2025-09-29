@@ -99,20 +99,5 @@ data "google_iam_policy" "conversational_agent_project_policy" {
     ]
   }
 
-
-  /*   binding {
-    role = "roles/aiplatform.serviceAgent"
-    members = [
-      "serviceAccount:service-${var.project_number}@gcp-sa-aiplatform.iam.gserviceaccount.com",
-    ]
-  } */
-
-  binding {
-    role = "roles/aiplatform.user"
-    members = [
-      "serviceAccount:sa-worker-agent-${var.environment}@conversational-agent-${var.environment}.iam.gserviceaccount.com",
-    ]
-  }
-
   depends_on = [google_project_service.project]
 }
