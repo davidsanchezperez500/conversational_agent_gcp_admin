@@ -1,9 +1,8 @@
 name: Release Management
 
 on:
-  push:
-    branches:
-      - 'main'
+  repository_dispatch:
+    types: [terraform_apply_completed]
       
 jobs:
   release-management:

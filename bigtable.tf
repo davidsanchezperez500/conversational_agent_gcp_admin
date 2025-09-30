@@ -13,10 +13,10 @@
     num_nodes    = var.num_nodes_bigtable_cluster
     storage_type = var.storage_type_bigtable_cluster
     zone         = "${var.region}-b"
-  }
+  } */
 
-  # a cluster with auto scaling.
-  cluster {
+# a cluster with auto scaling.
+/*   cluster {
     cluster_id   = "con-agent-cluster-2-${var.environment}"
     storage_type = var.storage_type_bigtable_cluster
     zone         = "${var.region}-c"
@@ -26,20 +26,19 @@
       cpu_target     = var.cpu_target_bigtable_cluster
       storage_target = var.storage_target_bigtable_cluster
     }
-  }
+  } */
 
-  labels = merge(
+/*   labels = merge(
     local.business_tags,
     {
       component = "data"
     }
   )
-}
- */
+} */
+
 # ==============================================================================
 # 2. BIGTABLE TABLE (The session history table)
 # ==============================================================================
-
 /* resource "google_bigtable_table" "conversational-agent_history_table" {
   project       = var.project_id
   instance_name = google_bigtable_instance.conversational_agent.id
@@ -56,5 +55,5 @@
     retention_period = var.retention_period_bigtable_backup
     frequency        = var.frequency_bigtable_backup
   }
-}
- */
+} */
+

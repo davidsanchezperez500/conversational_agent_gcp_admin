@@ -1,6 +1,3 @@
-data "google_project" "project" {
-}
-
 resource "google_project_iam_policy" "conversational_agent_project" {
   project     = var.project_id
   policy_data = data.google_iam_policy.conversational_agent_project_policy.policy_data
