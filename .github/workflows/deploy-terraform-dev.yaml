@@ -63,7 +63,8 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-      actions: 'write' 
+      actions: 'write'
+      repository-projects: write
     environment: dev-apply
 
     steps:
@@ -108,4 +109,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           event-type: terraform_apply_completed
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
-          repository: davidsanchezperez500/conversational_agent_gcp_admin
