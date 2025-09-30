@@ -103,3 +103,13 @@ variable "memory_limit_cloud_run_conversational" {
   type        = string
   description = "The memory limit for the conversational agent Cloud Run service"
 }
+
+variable "vpn_project_id" {
+  type    = string
+  default = "conversational-agent-commonnet"
+}
+
+variable "vpn_network_name" {
+  type    = string
+  default = "vpc-vpn-ha"
+}

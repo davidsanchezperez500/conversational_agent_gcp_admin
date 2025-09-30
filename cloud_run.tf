@@ -25,6 +25,13 @@ resource "google_cloud_run_v2_service_iam_member" "frontend_invokes_chatbot" {
   member   = "serviceAccount:${module.frontend_service.service_account_email}"
 }
 
+resource "google_cloud_run_v2_service_iam_member" "frontend_invokes_conversational" {
+  location = module.conversational_agent.location
+  name     = module.conversational_agent.service_name
+  project  = var.project_id
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${module.frontend_service.service_account_email}"
+}
 
 # Clud Run service for the chatbot agent backend
 module "chatbot_agent" {
