@@ -61,10 +61,9 @@ jobs:
     needs: terraform-plan
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
+      contents: 'write'
       id-token: 'write'
       actions: 'write'
-      repository-projects: write
     environment: dev-apply
 
     steps:
