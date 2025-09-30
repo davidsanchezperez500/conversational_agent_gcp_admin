@@ -46,8 +46,8 @@ module "chatbot_agent" {
   instance = google_bigtable_instance.conversational_agent.name
   role     = "roles/bigtable.user"
   member   = "serviceAccount:${module.chatbot_agent.service_account_email}" 
-}
- */
+} */
+
 # Cloud Run service for the conversational agent backend
 module "conversational_agent" {
   source           = "./modules/cloud-run-service"
@@ -57,6 +57,8 @@ module "conversational_agent" {
   service_name     = "conversational-agent"
   image_url        = "us-east1-docker.pkg.dev/conversational-agent-commonsec/docker-repository-${var.environment}/conversational-backend:latest"
   vpc_connector_id = google_vpc_access_connector.vpc_connector.id
+  cpu_limit        = var.cpu_limit_cloud_run_conversational
+  memory_limit     = var.memory_limit_cloud_run_conversational
   business_tags    = local.business_tags
   component_label  = "backend"
   depends_on       = [google_project_iam_policy.conversational_agent_project]
@@ -67,5 +69,11 @@ module "conversational_agent" {
   instance = google_bigtable_instance.conversational_agent.name
   role     = "roles/bigtable.user"
   member   = "serviceAccount:${module.conversational_agent.service_account_email}" 
-} */
+}
+*/
 
+resource "google_project_iam_member" "vertex_ai_user_role" {
+  project = var.project_id
+  role    = "roles/vertexai.user"
+  member  = "serviceAccount:${module.conversational_agent.service_account_email}"
+}

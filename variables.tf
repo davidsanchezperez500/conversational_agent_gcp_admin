@@ -8,12 +8,6 @@ variable "project_number" {
   description = "The project number to host the cluster in (required)"
 }
 
-variable "location_type" {
-  type        = string
-  description = "Either regional or zonal"
-  default     = "zonal"
-}
-
 variable "region" {
   type        = string
   description = "The region to host the cluster in"
@@ -70,76 +64,14 @@ variable "editors_members" {
   description = "List of users to be assigned to the editors"
 }
 
-variable "machine_type_ai_deployment" {
-  type        = string
-  description = "The machine type to use for the deployment"
-}
-
-variable "accelerator_type_ai_deployment" {
-  type        = string
-  description = "The accelerator type to use for the deployment"
-}
-
-variable "accelerator_count_ai_deployment" {
-  type        = number
-  description = "The number of accelerators to use for the deployment"
-}
-
-variable "min_replica_count_ai_deployment" {
-  type        = number
-  description = "The minimum number of replicas to use for the deployment"
-}
-
-variable "max_replica_count_ai_deployment" {
-  type        = number
-  description = "The maximum number of replicas to use for the deployment"
-  default     = 2
-}
-
-variable "metric_name_ai_deployment" {
-  type        = string
-  description = "The metric name to use for the deployment autoscaling"
-}
-
-variable "target_ai_deployment" {
-  type        = number
-  description = "The target value to use for the deployment autoscaling"
-}
-
-variable "owner_email" {
-  type        = string
-  description = "The email of the project owner"
-}
-
 variable "num_nodes_bigtable_cluster" {
   type        = number
   description = "The number of nodes for the Bigtable cluster"
 }
 
-
 variable "storage_type_bigtable_cluster" {
   type        = string
   description = "The storage type for the Bigtable cluster"
-}
-
-variable "min_nodes_bigtable_cluster" {
-  type        = number
-  description = "The minimum number of nodes for the Bigtable cluster with autoscaling"
-}
-
-variable "max_nodes_bigtable_cluster" {
-  type        = number
-  description = "The maximum number of nodes for the Bigtable cluster with autoscaling"
-}
-
-variable "cpu_target_bigtable_cluster" {
-  type        = number
-  description = "The CPU target for the Bigtable cluster with autoscaling"
-}
-
-variable "storage_target_bigtable_cluster" {
-  type        = number
-  description = "The storage target for the Bigtable cluster with autoscaling"
 }
 
 variable "stream_retention_bigtable_table" {
@@ -157,33 +89,17 @@ variable "frequency_bigtable_backup" {
   description = "The frequency for the Bigtable backups"
 }
 
-variable "min_instances_vpc_access_connector" {
-  type        = number
-  description = "The minimum number of instances for the VPC Access Connector"
-}
-
-variable "max_instances_vpc_access_connector" {
-  type        = number
-  description = "The maximum number of instances for the VPC Access Connector"
-}
-
-variable "ack_deadline_seconds" {
-  type        = number
-  description = "The acknowledgment deadline for Pub/Sub subscriptions"
-}
-
-variable "cpu_limit_cloud_run_worker" {
-  type        = string
-  description = "CPU limit for the Cloud Run services for the worker"
-}
-
-variable "memory_limit_cloud_run_worker" {
-  type        = string
-  description = "Memory limit for the Cloud Run services for the worker"
-}
-
 variable "api_key_front_value" {
   type        = string
   description = "The value of the API key to be stored in Secret Manager"
   sensitive   = true
+}
+variable "cpu_limit_cloud_run_conversational" {
+  type        = string
+  description = "The CPU limit for the conversational agent Cloud Run service"
+}
+
+variable "memory_limit_cloud_run_conversational" {
+  type        = string
+  description = "The memory limit for the conversational agent Cloud Run service"
 }
