@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.3.0 (2025-09-30)
+
+### Features
+
+- Config vpn ([#13](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/13),
+  [`fe5c68f`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/fe5c68f1a1bcc63dd3aa078221bee8272298a40e))
+
+
 ## v1.2.1 (2025-09-30)
 
 ### Bug Fixes
