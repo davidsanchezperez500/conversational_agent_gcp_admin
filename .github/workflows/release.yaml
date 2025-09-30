@@ -12,7 +12,8 @@ jobs:
       cancel-in-progress: false
       
     permissions:
-      contents: 'write' 
+      contents: 'write'
+      actions: 'read'
 
     steps:
       # Note: We checkout the repository at the branch that triggered the workflow
