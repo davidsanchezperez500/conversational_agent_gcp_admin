@@ -97,6 +97,20 @@ resource "google_compute_firewall" "allow_connector_egress_to_google" {
   ]
 }
 
+resource "google_compute_firewall" "allow_connector_to_vpn" {
+  name    = "allow-connector-to-vpn-${var.environment}"
+  project = var.project_id
+  network = google_compute_network.vpc_agent.name
+
+  source_ranges      = [google_vpc_access_connector.vpc_connector.ip_cidr_range]
+  destination_ranges = ["10.200.0.0/24"] # VPN range
+
+  allow {
+    protocol = "all"
+  }
+}
+
+
 # ==============================================================================
 # 4. PRIVATE SERVICE CONNECT (PSC) - Routing and DNS
 # ==============================================================================
@@ -135,6 +149,20 @@ resource "google_compute_route" "psc_restricted_route" {
   priority         = 100
 
 }
+
+# ==============================================================================
+# 5. VPN PEERING
+# ==============================================================================
+resource "google_compute_network_peering" "host_to_vpn" {
+  name                 = "peering-host-to-vpn-${var.environment}"
+  network              = google_compute_network.vpc_agent.self_link
+  peer_network         = "projects/${var.vpn_project_id}/global/networks/${var.vpn_network_name}"
+  export_custom_routes = false
+  import_custom_routes = true
+}
+
+
+
 
 # ==============================================================================
 #### FRONTEND CLOUD RUN SERVICE WITH INTERNAL TRAFFIC ONLY AND LOAD BALANCER WITH CLOUD ARMOR ####
