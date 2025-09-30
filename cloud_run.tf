@@ -72,8 +72,8 @@ module "conversational_agent" {
 }
 */
 
-resource "google_project_iam_member" "vertex_ai_user_role" {
+resource "google_project_iam_member" "cloud_run_to_gemini" {
   project = var.project_id
-  role    = "roles/vertexai.user"
+  role    = "roles/aiplatform.endpointUser"
   member  = "serviceAccount:${module.conversational_agent.service_account_email}"
 }
