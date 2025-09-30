@@ -2,6 +2,31 @@
 
 <!-- version list -->
 
+## v1.2.1 (2025-09-30)
+
+### Bug Fixes
+
+- Delete unused variables
+  ([#7](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/7),
+  [`df90faa`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/df90faa2bcfb719043a0342da0b932619b35ddb7))
+
+- Role cloud run to gemini
+  ([#8](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/8),
+  [`71d3bcc`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/71d3bcca4b25355b6554e144528969952e8adaf6))
+
+- Update release
+  ([#11](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/11),
+  [`d59e2c1`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/d59e2c106c6e55f88152193e86a4acb0a7366231))
+
+- Update release action
+  ([#12](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/12),
+  [`41fc387`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/41fc38745a71762e40e118953342941232c795b3))
+
+- Update release action
+  ([#9](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/9),
+  [`dd6809c`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/dd6809c29ff1587c5e086506c11fa91f0944fb66))
+
+
 ## v1.2.0 (2025-09-29)
 
 ### Features
