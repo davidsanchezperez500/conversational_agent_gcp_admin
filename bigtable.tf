@@ -2,10 +2,11 @@
 # 1. BIGTABLE INSTANCE (The container for all tables and clusters)
 # ==============================================================================
 
-/* resource "google_bigtable_instance" "conversational_agent" {
-  project       = var.project_id
-  name          = "con-agent-data-${var.environment}"
-  display_name  = "con-agent Bigtable  ${var.environment}"
+resource "google_bigtable_instance" "conversational_agent" {
+  project             = var.project_id
+  name                = "con-agent-data-${var.environment}"
+  display_name        = "con-agent Bigtable  ${var.environment}"
+  deletion_protection = true
 
   # A cluster with fixed number of nodes.
   cluster {
@@ -13,10 +14,10 @@
     num_nodes    = var.num_nodes_bigtable_cluster
     storage_type = var.storage_type_bigtable_cluster
     zone         = "${var.region}-b"
-  } */
+  }
 
-# a cluster with auto scaling.
-/*   cluster {
+  # a cluster with auto scaling.
+  /*   cluster {
     cluster_id   = "con-agent-cluster-2-${var.environment}"
     storage_type = var.storage_type_bigtable_cluster
     zone         = "${var.region}-c"
@@ -27,26 +28,25 @@
       storage_target = var.storage_target_bigtable_cluster
     }
   } */
-
-/*   labels = merge(
+  labels = merge(
     local.business_tags,
     {
       component = "data"
     }
   )
-} */
+}
 
 # ==============================================================================
 # 2. BIGTABLE TABLE (The session history table)
 # ==============================================================================
-/* resource "google_bigtable_table" "conversational-agent_history_table" {
+resource "google_bigtable_table" "conversational-agent_history_table" {
   project       = var.project_id
   instance_name = google_bigtable_instance.conversational_agent.id
   name          = "session_history_${var.environment}" # Table name referenced in app.py
 
   # Defines the Column Family 'data' for storing all conversational-agent session data.
   column_family {
-    family = "data" 
+    family = "data"
   }
 
   change_stream_retention = var.stream_retention_bigtable_table
@@ -55,5 +55,4 @@
     retention_period = var.retention_period_bigtable_backup
     frequency        = var.frequency_bigtable_backup
   }
-} */
-
+}

@@ -1,11 +1,12 @@
 # Cloud Run service for the conversational agent frontend
 module "frontend_service" {
-  source       = "./modules/cloud-run-service"
-  project_id   = var.project_id
-  region       = var.region
-  environment  = var.environment
-  service_name = "frontend-agent"
-  image_url    = "us-east1-docker.pkg.dev/conversational-agent-commonsec/docker-repository-${var.environment}/frontend:latest"
+  source           = "./modules/cloud-run-service"
+  project_id       = var.project_id
+  region           = var.region
+  environment      = var.environment
+  service_name     = "frontend-agent"
+  image_url        = "us-east1-docker.pkg.dev/conversational-agent-commonsec/docker-repository-${var.environment}/frontend:latest"
+  vpc_connector_id = google_vpc_access_connector.vpc_connector.id
 
   secrets = {
     "API_KEY" = "projects/579307523881/secrets/api-key-front-${var.environment}"
@@ -48,12 +49,12 @@ module "chatbot_agent" {
 
 }
 
-/* resource "google_bigtable_instance_iam_member" "new_bigtable_access" {
+resource "google_bigtable_instance_iam_member" "new_bigtable_access" {
   project  = var.project_id
   instance = google_bigtable_instance.conversational_agent.name
   role     = "roles/bigtable.user"
-  member   = "serviceAccount:${module.chatbot_agent.service_account_email}" 
-} */
+  member   = "serviceAccount:${module.chatbot_agent.service_account_email}"
+}
 
 # Cloud Run service for the conversational agent backend
 module "conversational_agent" {
@@ -71,13 +72,13 @@ module "conversational_agent" {
   depends_on       = [google_project_iam_policy.conversational_agent_project]
 }
 
-/* resource "google_bigtable_instance_iam_member" "conversational_bigtable_access" {
+resource "google_bigtable_instance_iam_member" "conversational_bigtable_access" {
   project  = var.project_id
   instance = google_bigtable_instance.conversational_agent.name
   role     = "roles/bigtable.user"
-  member   = "serviceAccount:${module.conversational_agent.service_account_email}" 
+  member   = "serviceAccount:${module.conversational_agent.service_account_email}"
 }
-*/
+
 
 resource "google_project_iam_member" "cloud_run_to_gemini" {
   project = var.project_id
