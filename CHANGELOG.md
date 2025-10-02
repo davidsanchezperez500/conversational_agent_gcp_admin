@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v1.4.1 (2025-10-02)
+
+### Bug Fixes
+
+- Delete secrets
+  ([#15](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/15),
+  [`3465134`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/3465134f13ca56bb6e72d9c6660c52d3208c65d9))
+
+
 ## v1.4.0 (2025-10-02)
 
 ### Features
