@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v1.4.0 (2025-10-02)
+
+### Features
+
+- Activate bigtable
+  ([#14](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/pull/14),
+  [`63691cc`](https://github.com/davidsanchezperez500/conversational_agent_gcp_admin/commit/63691cccb01b1f736d585bcfb5166a75a6af770f))
+
+
 ## v1.3.0 (2025-09-30)
 
 ### Features
