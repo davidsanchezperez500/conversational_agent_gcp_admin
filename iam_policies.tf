@@ -96,5 +96,12 @@ data "google_iam_policy" "conversational_agent_project_policy" {
     ]
   }
 
+  binding {
+    role = "roles/aiplatform.endpointUser"
+    members = [
+      "serviceAccount:sa-conversational-agent-${var.environment}@conversational-agent-${var.environment}.iam.gserviceaccount.com",
+    ]
+  }
+
   depends_on = [google_project_service.project]
 }
